@@ -1,5 +1,4 @@
 from threading import Thread
-from lxml.html.builder import THEAD
 
 class Mythread(Thread):
     
