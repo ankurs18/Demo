@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<company name="accenture">
+	<employee id="101">
+		<firstname>Ankur</firstname>
+		<lastname>Sethi</lastname>
+	</employee>
+	<employee id="102">
+		<firstname>ABC</firstname>
+		<lastname>XYZ</lastname>
+	</employee>
+</company>
