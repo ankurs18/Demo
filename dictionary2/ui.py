@@ -1,10 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-<<<<<<< HEAD
-import fh
-=======
 from fh import readwrite
->>>>>>> origin/master
 from threading import Thread
 
 class Mythread(Thread):
@@ -16,11 +12,7 @@ class Mythread(Thread):
         
     def run(self):
         print('Thread started', self.getName())        
-<<<<<<< HEAD
-        if(fh.readwrite(self.file_path)>0):
-=======
         if(readwrite(self.file_path)>0):
->>>>>>> origin/master
             self.label.config(text='Done!')
             
 def perform():

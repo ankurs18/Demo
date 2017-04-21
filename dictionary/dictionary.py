@@ -1,5 +1,9 @@
 import urllib.request
 from bs4 import BeautifulSoup
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 import re
 
 """html = urllib.request.urlopen("https://www.merriam-webster.com/dictionary/armada")
@@ -49,7 +53,12 @@ def search(word):
             '''.capitalize()'''
             counter+=1
     return(word.upper() + '\n \n' +meanings+'---------------------------------------------------- \n')
+<<<<<<< HEAD
     
+=======
+
+seachfunc=search    
+>>>>>>> origin/master
     
     
     
