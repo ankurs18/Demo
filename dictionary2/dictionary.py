@@ -1,8 +1,8 @@
-import urllib.request
-from bs4 import BeautifulSoup
-import re
+#import urllib.request
+#from bs4 import BeautifulSoup
+#import re
 import requests
-import json
+#import json
 
 
 app_id = '8745a4c9'
@@ -38,24 +38,36 @@ def thesaurus(word):
     r = requests.get(url2, headers = {'app_id': app_id, 'app_key': app_key})
     if r.status_code==200:
         synonymsjson=r.json()
-        print(synonymsjson)
+        #print(synonymsjson)
         counter=0
-        for val in synonymsjson['results'][0]['lexicalEntries'][0]['entries'][0]['senses']:
-            counter+=1
+        for val in synonymsjson['results'][0]['lexicalEntries']:
+            sense1=''
             #print(val)
-            synonyms+='Sense ' + str(counter)+': '+ val['examples'][0]['text']+'\n'
-            for val2 in val['subsenses'][0]['synonyms']:
-                synonyms+=val2['text'] + ', '
-            for val3 in val['synonyms']:
-                syonyms+=val3['text'] + ', '
-            synonyms+='\n'    
-                
+            for val2 in val['entries'][0]['senses']:
+                counter+=1
+                sense='Sense ' + str(counter)+': \n'
+                exampleno=0
+                if len(val2['examples'])>1:
+                    for example in val2['examples']:
+                        exampleno+=1
+                        sense +='Example ' + str(exampleno) + ': ' + example['text'] + '\n'
+                else:
+                    sense+='Example: '+ val2['examples'][0]['text'] + '\n'
+                if 'subsenses' in val2.keys():
+                    for subsenses in val2['subsenses']:
+                        for synonyms_subsenses in subsenses["synonyms"]:
+                            sense+=str(synonyms_subsenses['text'])+ ', '
+                for synonyms_senses in val2['synonyms']:
+                    sense+=str(synonyms_senses['text'])+', '
+                sense=sense[:-2]    
+                synonyms+=sense+ '\n'                                  
     else:
         synonyms='Sorry, Word not found' + '\n'  
             
     print(synonyms)
+    return synonyms
     
-thesaurus('new')   
+thesaurus('ace')   
 
   
     
