@@ -64,8 +64,8 @@ def thesaurus(word):
     else:
         synonyms='Sorry, Word not found' + '\n'  
             
-    print(synonyms)
-    return synonyms
+    print(synonyms)    
+    return(word.upper() + '\n \n' +synonyms+'---------------------------------------------------- \n')
     
 thesaurus('ace')   
 
