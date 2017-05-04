@@ -27,6 +27,7 @@ def search(word, need_examples):
             for val2 in val['entries'][0]['senses']:
                 counter+=1
                 lexical_category=val['lexicalCategory']
+<<<<<<< HEAD
                 meanings+=str(counter) + ': (' + lexical_category +') ' + val2['definitions'][0] + '\n'
                 if need_examples == True:
                     examples_count=0
@@ -37,12 +38,24 @@ def search(word, need_examples):
                                 meanings+='Example ' + str(examples_count) + ": " + examples['text'] + '\n'
                         else:
                             meanings+='Example: ' + examples['text'] + '\n'
+=======
+                meanings+=str(counter) + ': (' + lexical_category +')' + val2['definitions'][0] + '\n'
+                if need_examples == True:
+                    examples_count=0
+                    if len(val2['examples'])>1:
+                        for examples in val2['examples']:
+                            examples_count+=1    
+                            meanings+='Example ' + str(examples_count) + ": " + examples['text'] + '\n'
+                    else:
+                        meanings+='Example: ' + examples['text'] + '\n'
+>>>>>>> 042f67c72c6c555dc8b4f1e9cef22963f2d5e959
                 if 'subsenses' in val2.keys():
                     for subsenses_definitions in val2['subsenses']:
                         counter+=1
                         meanings+=str(counter) + ': (' + lexical_category +')' + subsenses_definitions['definitions'][0] + '\n'
                         if need_examples == True:
                             examples_count1=0
+<<<<<<< HEAD
                             if 'examples' in subsenses_definitions.keys():
                                 if len(subsenses_definitions['examples'])>1:
                                     for examples_subsenses in subsenses_definitions['examples']:
@@ -50,6 +63,14 @@ def search(word, need_examples):
                                         meanings+='Example ' + str(examples_count1) + ': ' + examples_subsenses['text'] + '\n'
                                 else:
                                     meanings+='Example: ' + subsenses_definitions['examples'][0]['text'] + '\n'    
+=======
+                            if len(subsenses_definitions['examples'])>1:
+                                for examples_subsenses in subsenses_definitions['examples']:
+                                    examples_count1+=1    
+                                    meanings+='Example ' + str(examples_count1) + ': ' + examples_subsenses['text'] + '\n'
+                            else:
+                                meanings+='Example: ' + subsenses_definitions['examples'][0]['text'] + '\n'    
+>>>>>>> 042f67c72c6c555dc8b4f1e9cef22963f2d5e959
     elif r.status_code==404:
         meanings='Sorry, Word not found' + '\n'
     
@@ -74,6 +95,7 @@ def thesaurus(word, need_examples):
                 sense='Sense ' + str(counter)+ '(' + val['lexicalCategory'] +'): \n'
                 exampleno=0
                 if need_examples == True:
+<<<<<<< HEAD
                     if 'examples' in val2.keys():
                         if len(val2['examples'])>1:
                             for example in val2['examples']:
@@ -81,6 +103,14 @@ def thesaurus(word, need_examples):
                                 sense +='Example ' + str(exampleno) + ': ' + example['text'] + '\n'
                         else:
                             sense+='Example: '+ val2['examples'][0]['text'] + '\n'
+=======
+                    if len(val2[lexicalCategory])>1:
+                        for example in val2['examples']:
+                            exampleno+=1
+                            sense +='Example ' + str(exampleno) + ': ' + example['text'] + '\n'
+                    else:
+                        sense+='Example: '+ val2['examples'][0]['text'] + '\n'
+>>>>>>> 042f67c72c6c555dc8b4f1e9cef22963f2d5e959
                 if 'subsenses' in val2.keys():
                     for subsenses in val2['subsenses']:
                         for synonyms_subsenses in subsenses["synonyms"]:
@@ -98,5 +128,10 @@ def thesaurus(word, need_examples):
     return(synonyms)
     
 #search('ACE', True)
+<<<<<<< HEAD
+=======
+
+thesaurus('ACE', True)   
+>>>>>>> 042f67c72c6c555dc8b4f1e9cef22963f2d5e959
 
 #search('NEW', True) 
