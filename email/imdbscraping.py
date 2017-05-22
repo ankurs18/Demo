@@ -16,15 +16,28 @@ def search(show):
     flag = 0
     for var in tag: 
         if flag == 1:
-            list.append(var) 
+            if 'href' not in str(var) and str(var).count('\n') < 3:
+                if '    ' in str(var):
+                    var=str(var)[str(var).find('    ')+4:]
+                   
+                list.append(var[0:-3]) 
         if str(var).find('<a id="latest"></a>')>-1:
             flag = 1
     
-    for val in list:
-        print(val)
-        print('------------')
-          
     
+    
+    elist = []  
+    for val in list:
+        dictionary = {}
+        #print(val)
+        #print('------------')
+        i=str(val).count(' ')
+        
+        dictionary['Episode'] = str(val)[0:val.find(' ')]
+        dictionary['Date'] = str(val)[i:] 
+        elist.append(dictionary)
+        
+    print(elist)
     
 search('silicon valley')    
     
