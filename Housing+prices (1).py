@@ -8,25 +8,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-get_ipython().magic('matplotlib inline')
 
-df = pd.read_csv('train.csv')
-df.info()
-test_df = pd.read_csv('test.csv')
+fd = pd.read_csv('train.csv')
+fd.info()
+train_df = pd.read_csv('test.csv')
 
 # In[2]:
 
 
-df[(df['GrLivArea']>4000)& (df['SalePrice']<300000)]
-
-
+fd.drop(fd[(fd['GrLivArea']>4000)& (fd['SalePrice']<300000)].index, axis =0, inplace=True)
 # In[3]:
 
 
 #sns.swarmplot(x='GrLivArea', y = 'SalePrice', data = df)
 #plt.scatter(x='GrLivArea', y = 'SalePrice', data = df)
 def clean(df):
-    df.drop(df[(df['GrLivArea']>4000)& (df['SalePrice']<300000)].index, axis =0, inplace=True)
+    
     
     
     # In[75]:
@@ -331,75 +328,37 @@ def clean(df):
 
 # In[105]:
 
-df= clean(df)
+
+fd= clean(fd)
 train_df = clean(train_df)
-SalePrice = df[['Id','SalePrice']]
+SalePrice = fd[['Id','SalePrice']]
 SalePrice[['Id','SalePrice']].iloc[0]
-df.columns
+fd.columns
 
 
-# In[ ]:
-
-
-
-
-
-# In[106]:
-
-
-#column_types = list()
-#for x in df.columns:
-#    column_types.append((x,type(df[x].iloc[0])))
-column_types=[(x,type(df[x].iloc[0])) for x in df.columns]
+column_types=[(x,type(fd[x].iloc[0])) for x in fd.columns]
 cat_columns = [x for (x,coltype) in column_types if coltype==str]
-numerical_columns = df.columns.difference(cat_columns)
+numerical_columns = fd.columns.difference(cat_columns)
 date_columns = ['YearRemodAdd', 'YrSold' , 'YearBuilt', 'MoSold', 'GarageYrBlt']
-len(df.columns) - (len(cat_columns)+len(numerical_columns))
+len(fd.columns) - (len(cat_columns)+len(numerical_columns))
 numerical_columns = numerical_columns.difference(['MSSubClass'])
 cat_columns = cat_columns.append('MSSubClass')
 numerical_columns.difference(date_columns)
 print(['Id','SalePrice'].append(date_columns))
 cols_normalize = numerical_columns.difference(date_columns)
-cols_normalize
 
-
-# In[ ]:
-
-
-
-
-
-# In[107]:
-
-
+print('sethi')
+print(fd[cols_normalize][fd[cols_normalize].isnull()])
 from sklearn.preprocessing import StandardScaler
 scaler  = StandardScaler()
-scaler.fit(df[cols_normalize].drop(['Id','SalePrice'], axis =1))
-dff_n = df.copy()
+scaler.fit(fd[cols_normalize].drop(['Id','SalePrice'], axis =1))
+dff_n = fd.copy()
 #dff_n[cols_normalize.difference(['Id','SalePrice'])] = pd.DataFrame(scaler.transform(df[cols_normalize].drop(['Id','SalePrice'], axis =1)), columns= cols_normalize.difference(['Id','SalePrice']))
 dff_n[cols_normalize.difference(['Id','SalePrice'])] = scaler.transform(df[cols_normalize].drop(['Id','SalePrice'], axis =1))
 #dff_n[cols_normalize.difference(['Id','SalePrice'])] =scaler.transform(df[cols_normalize].drop(['Id','SalePrice'], axis =1))
 #dff_n = pd.concat(dff_n.append(SalePrice)
 #dff_n[['Id','SalePrice']].merge(SalePrice)
 dff_n[['Id','SalePrice']] = SalePrice
-dff_n.head()
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[108]:
-
 
 #dff=pd.get_dummies(dff_n.drop(['BsmtCond'],axis=1))
 dff=pd.get_dummies(dff_n.drop(['numOfBsmt','BsmtUnfSF', 'HalfBath', 'FullBath', 'BsmtFullBath', 'BsmtHalfBath'],axis=1))
@@ -415,42 +374,66 @@ dff.index.values
 dff.drop('MSSubClass', axis = 1, inplace=True)
 
 
-# In[110]:
-
-
-from sklearn.model_selection import train_test_split
+"""from sklearn.model_selection import train_test_split
 dff_train = dff.drop(['GarageCars','GarageArea', 'Id', 'SalePrice','YearRemodAdd','YearBuilt', 'WoodDeckSF','OpenPorchSF','EnclosedPorch','3SsnPorch','ScreenPorch'], axis =1)
 X_train, X_test, y_train, y_test = train_test_split(dff_train, dff['SalePrice'], test_size=0.3, random_state=101)
 y_train = np.log1p(y_train)
+"""
+
+train_id = train_df['Id']
+column_types=[(x,type(train_df[x].iloc[0])) for x in train_df.columns]
+cat_columns = [x for (x,coltype) in column_types if coltype==str]
+numerical_columns = train_df.columns.difference(cat_columns)
+date_columns = ['YearRemodAdd', 'YrSold' , 'YearBuilt', 'MoSold', 'GarageYrBlt']
+len(train_df.columns) - (len(cat_columns)+len(numerical_columns))
+numerical_columns = numerical_columns.difference(['MSSubClass'])
+cat_columns = cat_columns.append('MSSubClass')
+numerical_columns.difference(date_columns)
+print(['Id','SalePrice'].append(date_columns))
+cols_normalize = numerical_columns.difference(date_columns)
 
 
-# In[111]:
+from sklearn.preprocessing import StandardScaler
+scaler  = StandardScaler()
+print('ankur')
+print(train_df[cols_normalize][train_df[cols_normalize].isnull()])
+scaler.fit(train_df[cols_normalize].drop(['Id'], axis =1))
+train_dff_n = train_df.copy()
+#train_dff_n[cols_normalize.difference(['Id'])] = pd.DataFrame(scaler.transform(train_df[cols_normalize].drop(['Id'], axis =1)), columns= cols_normalize.difference(['Id']))
+train_dff_n[cols_normalize.difference(['Id'])] = scaler.transform(train_df[cols_normalize].drop(['Id'], axis =1))
+#train_dff_n[cols_normalize.difference(['Id'])] =scaler.transform(train_df[cols_normalize].drop(['Id'], axis =1))
+#train_dff_n = pd.concat(train_dff_n.append(SalePrice)
+#train_dff_n[['Id','SalePrice']].merge(SalePrice)
+train_dff_n[['Id']] = train_id 
+
+#train_dff=pd.get_dummies(train_dff_n.drop(['BsmtCond'],axis=1))
+train_dff=pd.get_dummies(train_dff_n.drop(['numOfBsmt','BsmtUnfSF', 'HalfBath', 'FullBath', 'BsmtFullBath', 'BsmtHalfBath'],axis=1))
+#train_dff['MSSubClass']=pd.get_dummies(train_dff['MSSubClass'])
+#train_dff=train_dff.copy()
 
 
+# In[109]:
+
+
+train_dff = train_dff.merge(pd.get_dummies(train_dff['MSSubClass'], prefix='MSSubClass'), on = train_df.index.values)
+train_dff.index.values
+train_dff.drop('MSSubClass', axis = 1, inplace=True)
+
+"""
+
+sfdfdfsfdfsdsf
+
+# In[111]:"""
+
+"""
 from sklearn.ensemble import RandomForestRegressor
 from collections import Counter
 rf = RandomForestRegressor(random_state=101)
-rf.fit(X_train,y_train)
+rf.fit(dff.drop(['GarageCars','GarageArea', 'Id', 'SalePrice'],dff['SalePrice'])
 scores =sorted(list(zip(map(lambda x: round(x, 4), rf.feature_importances_),X_train.columns)),reverse=True)
 c =Counter([y.partition('_')[0] for (x,y) in scores])
-c['Heating']
+c['Heating']"""
 
-
-# In[ ]:
-
-
-
-
-
-# In[112]:
-
-
-from sklearn.metrics import mean_squared_log_error
-from math import sqrt
-pred = rf.predict(X_test)
-pred = np.expm1(pred)
-rmse = sqrt(mean_squared_log_error(y_test, pred))
-rmse
 
 
 # In[118]:
@@ -459,12 +442,12 @@ rmse
 from xgboost.sklearn import XGBRegressor
 
 xgb = XGBRegressor()
-bst = xgb.fit(X_train,y_train)
-preds = xgb.predict(X_test)
+bst = xgb.fit(dff.drop(['GarageCars','GarageArea', 'Id', 'SalePrice'], axis =1),dff['SalePrice'])
+dff = xgb.predict(train_dff.drop(['GarageCars','GarageArea', 'Id'], axis =1))
 preds = np.expm1(preds)
-rmse = sqrt(mean_squared_log_error(y_test, preds))
+"""rmse = sqrt(mean_squared_log_error(y_test, preds))
 rmse
-
+"""
 
 # In[ ]:
 
@@ -476,68 +459,16 @@ rmse
 
 
 submission = pd.DataFrame({
-        "Id": X_test["Id"],
-        "Label": pred
+        "Id": train_dff["Id"],
+        "Label": preds
     })
 
+submission.to_csv('sub.csv')
 
+print('Done')
 # In[ ]:
 
 
-import operator
-def getscores(scores):
-    score = dict()
-    for row in scores:
-        name = row[1]
-        name = name.partition('_')[0]
-        if name in score.keys():
-            score[name]=score[name]+row[0]
-        else:
-            score[name]=row[0]
-    
-    for k, v in score.items():
-        score[k]=score[k]/c[k]
-    sorted_x = sorted(score.items(), key=operator.itemgetter(1),reverse=True)
-    return sorted_x
-x = getscores(scores)            
-print(type(x))
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[116]:
-
-
-from sklearn.feature_selection import SelectKBest
-from sklearn.feature_selection import f_regression
-selectkbest = SelectKBest(score_func=f_regression, k='all')
-fit = selectkbest.fit(X_train, y_train)
-scores_kbest =sorted(list(zip(map(lambda x: round(x, 4), fit.scores_),X_train.columns)),reverse=True)
-scores_kbest_n = getscores(scores_kbest)
-scores_kbest_n
-
-
-# In[117]:
-
-
-from sklearn.preprocessing import Normalizer
-normalizer  = Normalizer().fit(df[cols_normalize])
-dff_n = df.copy()
-dff_n[cols_normalize.difference(['Id','SalePrice'])] = pd.DataFrame(normalizer.transform(df[cols_normalize].drop(['Id','SalePrice'], axis =1)), columns= cols_normalize.difference(['Id','SalePrice']))
-#dff_n = pd.concat(dff_n.append(SalePrice)
-#dff_n[['Id','SalePrice']].merge(SalePrice)
-dff_n[['Id','SalePrice']] = SalePrice
-dff_n.head()
 
 
 # In[ ]:
